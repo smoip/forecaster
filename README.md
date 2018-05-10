@@ -11,6 +11,7 @@ Simple weather forecast service using Serverless and AWS.
 - [Serverless](https://serverless.com/)
   - The backend uses the Serverless framework to manage resources in AWS
 - [Python](https://www.python.org/downloads/release/python-365/) =~ 3.6
+- Fetching data from the Weather Underground API requires an [API key](https://www.wunderground.com/weather/api/d/pricing.html)
 
 > Note: this guide assumes a MacOS or Linux environment
 
@@ -38,6 +39,12 @@ TBD
 ## Deploy
 
 ### API
+
+Create `.secrets.yml` and add the following:
+- `wunderground_api_key: <your api key>`
+- `.example-secrets.yml` is provided for reference
+
+> Do not check `.secrets.yml` into version control
 
 Deploy the serverless framework to AWS
 - `$ sls deploy`
