@@ -55,6 +55,12 @@ functions:
       - http:
           path: test_write
           method: get
+  test_fetch_forecast:
+    handler: handler.test_fetch_forecast
+    events:
+      - http:
+          path: test_fetch_forecast
+          method: post
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
