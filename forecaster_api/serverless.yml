@@ -1,32 +1,27 @@
 service: forecaster-api
 
+plugins:
+  - serverless-python-requirements
+custom:
+  pythonRequirements:
+    dockerizePip: true
+  secrets: ${file(../.secrets.yml)}
+
 provider:
   name: aws
   runtime: python3.6
   timeout: 10
 
-custom:
-  secrets: ${file(../.secrets.yml)}
-
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+  iamRoleStatements:
+    - Effect: "Allow"
+
+      Action:
+        - "dynamodb:*"
+      Resource: "*"
 
 # you can define service wide environment variables here
   environment:
@@ -47,6 +42,18 @@ functions:
     events:
       - http:
           path: ping
+          method: get
+  test_read:
+    handler: handler.test_read
+    events:
+      - http:
+          path: test_read
+          method: get
+  test_write:
+    handler: handler.test_write
+    events:
+      - http:
+          path: test_write
           method: get
 
 #    The following are a few example events you can configure
@@ -82,14 +89,33 @@ functions:
 #    environment:
 #      variable2: value2
 
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+resources:
+  Resources:
+    DynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: forecast-table
+        AttributeDefinitions:
+          - AttributeName: zip_code
+            AttributeType: S
+        KeySchema:
+          - AttributeName: zip_code
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
+    DynamoDBIamPolicy:
+      Type: AWS::IAM::Policy
+      DependsOn: DynamoDbTable
+      Properties:
+        PolicyName: lambda-dynamodb
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+              Resource: arn:aws:dynamodb:*:*:table/forecast-table
+        Roles:
+          - Ref: IamRoleLambdaExecution

@@ -28,6 +28,8 @@ The API and client portions are described sepately
   - you'll need the `aws_access_key_id` and `aws_secret_access_key` for your IAM user.
 3. Configure serverless
   - `$ sls config`
+4. Install [Serverless Python Requirements](https://www.npmjs.com/package/serverless-python-requirements)
+  - `sls plugin install -n serverless-python-requirements`
 
 > Note: if you have multiple IAM users specified in `~/.aws/credentials`, you can specify which to use with serverless:
 > `$ sls [config|deploy] --aws-profile <profile name>`
@@ -48,6 +50,10 @@ Create `.secrets.yml` and add the following:
 
 Deploy the serverless framework to AWS
 - `$ sls deploy`
+
+> Note: if you get errors along the lines of `Could not find a version that satisfies the requirement <some python package>`
+> Make sure you a) have [pip](https://pip.pypa.io/en/stable/installing/) and b) try running `forecaster_api/$ pip install <some python package>`
+> ...this shouldn't happen, but just in case
 
 ### Client
 
