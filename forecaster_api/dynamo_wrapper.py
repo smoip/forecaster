@@ -1,5 +1,5 @@
 import boto3
-import datetime
+from time_handler import TimeHandler
 
 class DynamoDB(object):
     def __init__(self):
@@ -20,23 +20,34 @@ class DynamoDB(object):
         )
         return response
 
-    def write(self, zip_code, forecast):
-        time_stamp = str(datetime.datetime.now())
+    def update(self, zip_code, forecast):
+        dynamodb_response = self.client.update_item(
+            TableName=self.table_name,
+            Item={
+                'zip_code': {
+                    'S': zip_code,
+                },
+                'timestamp': {
+                    'S': TimeHandler().current_timestamp(),
+                },
+                'forecast': {
+                    'S': forecast,
+                }
+            }
+        )
 
+    def create(self, zip_code, forecast):
         dynamodb_response = self.client.put_item(
             TableName=self.table_name,
             Item={
                 'zip_code': {
                     'S': zip_code,
                 },
-                'time_stamp': {
-                    'S': time_stamp,
+                'timestamp': {
+                    'S': TimeHandler().current_timestamp(),
                 },
                 'forecast': {
-                    'M': forecast,
+                    'S': forecast,
                 }
             }
         )
-
-
-        
