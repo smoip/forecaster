@@ -36,7 +36,13 @@ The API and client portions are described sepately
 
 ### Client
 
-TBD
+The client portion consists of an elm-generated HTML file
+
+1. Install elm
+  - homebrew: `$ brew install elm`
+  - npm: `$ npm install -g elm`
+2. Generate client HTML
+  - (from project root): `$ cd forecaster_client && elm-make forecaster.elm`
 
 ## Deploy
 
