@@ -16,6 +16,9 @@ def fetch_forecast(event, context):
         zip_code = params['zip_code']
     except KeyError:
         return build_response(400, { 'error' : 'please supply a zip_code' })
+    if len(zip_code) < 5:
+        return build_response(400, { 'error' : 'zip_code must be at least 5 digits' })
+    zip_code = zip_code[:5]
     dynamo_db = DynamoDB()
     existing = dynamo_db.find(zip_code)
     try:

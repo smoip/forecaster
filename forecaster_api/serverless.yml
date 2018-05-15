@@ -9,6 +9,8 @@ custom:
 
 provider:
   name: aws
+  apiKeys:
+    - forecasterApiKey
   runtime: python3.6
   timeout: 10
 
@@ -43,30 +45,35 @@ functions:
       - http:
           path: ping
           method: get
+          private: true
   test_read:
     handler: handler.test_read
     events:
       - http:
           path: test_read
           method: get
+          private: true
   test_write:
     handler: handler.test_write
     events:
       - http:
           path: test_write
           method: get
+          private: true
   fetch_forecast:
     handler: handler.fetch_forecast
     events:
       - http:
           path: fetch_forecast
           method: post
+          private: true
   test_fetch_forecast:
     handler: handler.test_fetch_forecast
     events:
       - http:
           path: test_fetch_forecast
           method: post
+          private: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
