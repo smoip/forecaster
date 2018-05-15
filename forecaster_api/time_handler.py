@@ -11,4 +11,4 @@ class TimeHandler(object):
         return parser.parse(timestamp)
 
     def stale_timestamp(self, timestamp):
-        return (datetime.datetime.now() - parse_timestamp(timestamp)).seconds // 3600 >= MAX_TIMESTAMP_AGE
+        return (datetime.datetime.now() - self.parse_timestamp(timestamp)).seconds // 3600 >= self.MAX_TIMESTAMP_AGE

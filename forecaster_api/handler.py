@@ -1,6 +1,7 @@
 import os
 import json
 from dynamo_wrapper import DynamoDB
+from time_handler import TimeHandler
 import requests
 
 #  public handlers
@@ -18,21 +19,23 @@ def fetch_forecast(event, context):
     dynamo_db = DynamoDB()
     existing = dynamo_db.find(zip_code)
     try:
-        old_ts = existing['timestamp']
+        old_ts = existing['Item']['timestamp']['S']
         if TimeHandler().stale_timestamp(old_ts):
-            forecast = refresh_forecast(zip_code, False)
+            forecast = refresh_forecast(zip_code)
         else:
             forecast = existing
     except KeyError:
-        forecast = refresh_forecast(zip_code, True)
+        forecast = refresh_forecast(zip_code)
 
-    forecast = json.loads(forecast)
-
-    return build_response(200, forecast)
+    try:
+        resp = forecast['Item']
+    except KeyError:
+        resp = forecast['Attributes']
+    return build_response(200, resp)
 
 # internal methods
 
-def refresh_forecast(zip_code, new_entry):
+def refresh_forecast(zip_code):
     forecast = fresh_forecast(zip_code)
     if not forecast:
         return { 'error': 'there was a problem fetching data from the wunderground API' }
@@ -42,10 +45,7 @@ def refresh_forecast(zip_code, new_entry):
     forecast = json.dumps(forecast)
 
     dynamo_db = DynamoDB()
-    if new_entry:
-        resp = dynamo_db.create(zip_code, forecast)
-    else:
-        resp = dynamo_db.update(zip_code, forecast)
+    resp = dynamo_db.update(zip_code, forecast)
     return resp
 
 
