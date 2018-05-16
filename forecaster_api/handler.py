@@ -61,11 +61,6 @@ def wundergound_api_key():
     return os.environ['wunderground_api_key']
 
 def build_response(code, body):
-    #  headers: {
-        #  "Access-Control-Allow-Credentials": True,
-        #  "Access-Control-Allow-Origin": "*",
-        #  "Content-Type": "application/json"
-    #  },
     return {
         "statusCode": code,
         "body": json.dumps(body),
