@@ -46,6 +46,7 @@ functions:
           path: ping
           method: get
           private: true
+          cors: true
   test_read:
     handler: handler.test_read
     events:
@@ -53,6 +54,7 @@ functions:
           path: test_read
           method: get
           private: true
+          cors: true
   test_write:
     handler: handler.test_write
     events:
@@ -60,6 +62,7 @@ functions:
           path: test_write
           method: get
           private: true
+          cors: true
   fetch_forecast:
     handler: handler.fetch_forecast
     events:
@@ -67,6 +70,7 @@ functions:
           path: fetch_forecast
           method: post
           private: true
+          cors: true
   test_fetch_forecast:
     handler: handler.test_fetch_forecast
     events:
@@ -74,6 +78,7 @@ functions:
           path: test_fetch_forecast
           method: post
           private: true
+          cors: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
