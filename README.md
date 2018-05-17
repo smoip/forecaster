@@ -39,6 +39,7 @@ Configure serverless
   - `$ sls config`
 Install [Serverless Python Requirements](https://www.npmjs.com/package/serverless-python-requirements)
   - `sls plugin install -n serverless-python-requirements`
+
 Create `.secrets.yml` (in the project root directory )and add the following:
   - `wunderground_api_key: [your wunderground api key]`
   - `.example-secrets.yml` is provided for reference
