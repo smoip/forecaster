@@ -1,6 +1,6 @@
 # Forecaster
 
-Simple weather forecast service using Serverless and AWS.
+Simple weather forecast service using Serverless AWS and Vue.js.
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ Simple weather forecast service using Serverless and AWS.
 
 ## Setup
 
-1. clone this repo
+Clone this repo
   - `$ git clone git@github.com:smoip/forecaster.git` (ssh requires [some github setup](https://help.github.com/articles/connecting-to-github-with-ssh/))
 
 The API and client portions are described separately.
@@ -30,14 +30,14 @@ Client functionality depends on the API, so you probably want to set that up fir
 Run the following from the `forecaster_api` directory
   - `cd ~/[parent dir]/forecaster/forecaster_api`
 
-1. Install serverless
+Install serverless
   - `$ npm install serverless -g`
-2. Configure AWS CLI
+Configure AWS CLI
   - `$ aws configure`
   - you'll need the `aws_access_key_id` and `aws_secret_access_key` for your IAM user.
-3. Configure serverless
+Configure serverless
   - `$ sls config`
-4. Install [Serverless Python Requirements](https://www.npmjs.com/package/serverless-python-requirements)
+Install [Serverless Python Requirements](https://www.npmjs.com/package/serverless-python-requirements)
   - `sls plugin install -n serverless-python-requirements`
 
 > Note: if you get errors along the lines of `Could not find a version that satisfies the requirement [some python package]`
@@ -46,11 +46,11 @@ Run the following from the `forecaster_api` directory
 
 #### Deploy
 
-2. Deploy the serverless framework to AWS
+Deploy the serverless framework to AWS
   - `$ sls deploy`
   - take note of the `forecasterApiKey` value and the full URL of the `fetch_forecast` endpoint returned from this command
   - check [here](https://serverless.com/framework/docs/providers/aws/guide/deploying/) for deploy troubleshooting
-2. Verify deployment
+Verify deployment
   - use the `ping` endpoint to verify your serverless stack has properly deployed
 ```
 $ curl "[output of ping endpoint from deploy command]" --header "x-api-key:[value of forecasterApiKey]"
@@ -69,11 +69,11 @@ The client portion consists of a standalone Vue.js app.
 Run the following form the `forecaster_client` directory
   - `cd ~/[parent dir]/forecaster/forecaster_client`
 
-1. Install npm packages
+Install npm packages
   - `npm install`
-2. Install vue-cli
+Install vue-cli
   - `npm install -g @vue/cli
-3. Set environment variables
+Set environment variables
   - open `forecaster_client/src/utils.js` in your text editor
   - replace the return values of the `apiKey` and `apiUrl` functions with the serverless generated values `forecasterApiKey` and the `fetch_forecast` endpoint respectively 
   - example:
