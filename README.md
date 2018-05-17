@@ -17,9 +17,18 @@ Simple weather forecast service using Serverless and AWS.
 
 ## Setup
 
-The API and client portions are described sepately
+1. clone this repo
+  - `$ git clone git@github.com:smoip/forecaster.git` (ssh requires [some github setup](https://help.github.com/articles/connecting-to-github-with-ssh/))
+
+The API and client portions are described separately.
+Client functionality depends on the API, so you probably want to set that up first.
 
 ### API
+
+#### Setup
+
+Run the following from the `forecaster_api` directory
+  - `cd ~/[parent dir]/forecaster/forecaster_api`
 
 1. Install serverless
   - `$ npm install serverless -g`
@@ -31,44 +40,61 @@ The API and client portions are described sepately
 4. Install [Serverless Python Requirements](https://www.npmjs.com/package/serverless-python-requirements)
   - `sls plugin install -n serverless-python-requirements`
 
-> Note: if you have multiple IAM users specified in `~/.aws/credentials`, you can specify which to use with serverless:
-> `$ sls [config|deploy] --aws-profile <profile name>`
-
-### Client
-
-## Deploy
-
-### API
-
-Create `.secrets.yml` and add the following:
-- `wunderground_api_key: <your api key>`
-- `.example-secrets.yml` is provided for reference
-
-> Do not check `.secrets.yml` into version control
-
-Deploy the serverless framework to AWS
-- `$ sls deploy`
-
-> Note: if you get errors along the lines of `Could not find a version that satisfies the requirement <some python package>`
-> Make sure you a) have [pip](https://pip.pypa.io/en/stable/installing/) and b) try running `forecaster_api/$ pip install <some python package>`
+> Note: if you get errors along the lines of `Could not find a version that satisfies the requirement [some python package]`
+> Make sure you a) have [pip](https://pip.pypa.io/en/stable/installing/) and b) try running `forecaster_api/$ pip install [some python package]`
 > ...this shouldn't happen, but just in case
 
+#### Deploy
+
+2. Deploy the serverless framework to AWS
+  - `$ sls deploy`
+  - take note of the `forecasterApiKey` value and the full URL of the `fetch_forecast` endpoint returned from this command
+  - check [here](https://serverless.com/framework/docs/providers/aws/guide/deploying/) for deploy troubleshooting
+2. Verify deployment
+  - use the `ping` endpoint to verify your serverless stack has properly deployed
+```
+$ curl "[output of ping endpoint from deploy command]" --header "x-api-key:[value of forecasterApiKey]"
+#=> pong
+```
+
+> Note: if you have multiple IAM users specified in `~/.aws/credentials`, you can specify which to use with serverless:
+> `$ sls [config|deploy] --aws-profile [profile name]`
+
 ### Client
 
-TBD
+The client portion consists of a standalone Vue.js app.
 
-## Testing
+#### Setup
 
-To manually confirm the API has successfully deployed to AWS:
+Run the following form the `forecaster_client` directory
+  - `cd ~/[parent dir]/forecaster/forecaster_client`
+
+1. Install npm packages
+  - `npm install`
+2. Install vue-cli
+  - `npm install -g @vue/cli
+3. Set environment variables
+  - open `forecaster_client/src/utils.js` in your text editor
+  - replace the return values of the `apiKey` and `apiUrl` functions with the serverless generated values `forecasterApiKey` and the `fetch_forecast` endpoint respectively 
+  - example:
 ```
-$ sls info
-#=> Service Information
-#=> service: forecaster-api
-#=> stage: dev
-  ...
-#=> endpoints:
-#=>   GET - https://<api gateway address>.<region>.amazonaws.com/dev/ping
+export default {
+  apiKey () {
+    return "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  },
 
-$ curl https://<api gateway address>.<region>.amazonaws.com/dev/ping
-#=> "pong"
+  apiUrl () {
+    return "https://XXXXXXX.execute-api.[region].amazonaws.com/[stage]/fetch_forecast"
+  }
+}
 ```
+
+#### Serve/Build
+
+Run a local dev server (from the forecaster_client dir):
+  - `$ npm run serve`
+  - visit `localhost:8080` to run client
+
+Build for deployment (from the forecaster_client dir):
+  - `$ npm run build`
+  - client app deployment instructions are outside the scope of this project
