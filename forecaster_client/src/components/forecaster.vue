@@ -32,6 +32,7 @@
 <script>
 import axios from 'axios'
 import Day from './day.vue'
+import utils from '../utils.js'
 
 export default {
   name: 'Forecaster',
@@ -58,12 +59,12 @@ export default {
       let data = JSON.stringify({
         zip_code: this.zipCode,
       })
-      let headers = { headers: { "x-api-key": this.forecasterApiKey } }
-      axios.post(this.forecasterApiUrl, data, headers)
+      let headers = { headers: { "x-api-key": utils.apiKey() } }
+      axios.post(utils.apiUrl(), data, headers)
         .then((resp) => this.updateForecast(resp))
     },
     
-    // I just don't want to deal with more deps
+    // I know lodash is a thing, just don't want to deal with more deps
     isEmpty (obj) {
       return Object.keys(obj).length === 0 && obj.constructor === Object
     },
@@ -91,11 +92,8 @@ export default {
     }
   },
 
-  // these values should really be env vars... hard with client-side only
   data () {
     return {
-      forecasterApiUrl: "https://lio6akrrmb.execute-api.us-east-1.amazonaws.com/dev/fetch_forecast",
-      forecasterApiKey: "66nhRGa2hc9Anj0oRAbnJ2nkFKnjeYuv95w27Zho",
       forecast: {
         forecast: {
           simpleforecast: {

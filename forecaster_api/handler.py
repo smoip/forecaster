@@ -70,26 +70,3 @@ def build_response(code, body):
             "Access-Control-Allow-Origin": "*"
         }
     }
-
-# test methods
-
-def test_read(event, context):
-    dynamo_db = DynamoDB()
-    resp = dynamo_db.find('12346')
-    return build_response(200, resp)
-
-def test_write(event, context):
-    dynamo_db = DynamoDB()
-    resp = dynamo_db.write('54321', json.dumps({ 'tomorrow': { 'S': 'fucking beautiful' } }))
-    return build_response(200, resp)
-
-def test_fetch_forecast(event, context):
-    params = json.loads(event['body'])
-    try:
-        zip_code = params['zip_code']
-    except KeyError:
-        return build_response(400, "error: please supply a zip_code")
-
-    wunderground_url = f'http://api.wunderground.com/api/{wundergound_api_key()}/forecast/q/{zip_code}.json'
-    req = requests.get(wunderground_url)
-    return build_response(200, json.loads(req.text))
