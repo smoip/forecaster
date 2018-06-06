@@ -32,11 +32,14 @@ Run the following from the `forecaster_api` directory
 
 Install serverless
   - `$ npm install serverless -g`
+
 Configure AWS CLI
   - `$ aws configure`
   - you'll need the `aws_access_key_id` and `aws_secret_access_key` for your IAM user.
+
 Configure serverless
   - `$ sls config`
+
 Install [Serverless Python Requirements](https://www.npmjs.com/package/serverless-python-requirements)
   - `sls plugin install -n serverless-python-requirements`
 
@@ -71,13 +74,15 @@ The client portion consists of a standalone Vue.js app.
 
 #### Setup
 
-Run the following form the `forecaster_client` directory
+Run the following from the `forecaster_client` directory
   - `cd ~/[parent dir]/forecaster/forecaster_client`
 
 Install npm packages
   - `npm install`
+
 Install vue-cli
-  - `npm install -g @vue/cli
+  - `npm install -g @vue/cli`
+
 Set environment variables
   - open `forecaster_client/src/utils.js` in your text editor
   - replace the return values of the `apiKey` and `apiUrl` functions with the serverless generated values `forecasterApiKey` and the `fetch_forecast` endpoint respectively 
